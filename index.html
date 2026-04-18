@@ -183,31 +183,39 @@ document.querySelectorAll(".icon").forEach(icon => {
 
     let offsetX = 0;
     let offsetY = 0;
-    let isDragging = false;
+    let dragging = false;
 
     icon.addEventListener("mousedown", (e) => {
-        if (e.button !== 0) return; // only LEFT click
+        if (e.button !== 0) return; // only left click
 
-        isDragging = true;
+        dragging = true;
 
         offsetX = e.clientX - icon.offsetLeft;
         offsetY = e.clientY - icon.offsetTop;
 
         icon.style.cursor = "grabbing";
+
+        // 🔥 prevent weird browser drag behavior
+        e.preventDefault();
     });
 
     document.addEventListener("mousemove", (e) => {
-        if (!isDragging) return;
+        if (!dragging) return;
 
         icon.style.left = (e.clientX - offsetX) + "px";
         icon.style.top = (e.clientY - offsetY) + "px";
     });
 
-    document.addEventListener("mouseup", () => {
-        if (!isDragging) return;
+    document.addEventListener("mouseup", (e) => {
+        if (e.button !== 0) return;
 
-        isDragging = false;
+        dragging = false;
         icon.style.cursor = "grab";
+    });
+
+    // 🔥 extra safety (if mouse leaves window)
+    window.addEventListener("blur", () => {
+        dragging = false;
     });
 
 });
