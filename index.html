@@ -186,6 +186,8 @@ document.querySelectorAll(".icon").forEach(icon => {
     let isDragging = false;
 
     icon.addEventListener("mousedown", (e) => {
+        if (e.button !== 0) return; // only LEFT click
+
         isDragging = true;
 
         offsetX = e.clientX - icon.offsetLeft;
@@ -202,12 +204,8 @@ document.querySelectorAll(".icon").forEach(icon => {
     });
 
     document.addEventListener("mouseup", () => {
-        isDragging = false;
-        icon.style.cursor = "grab";
-    });
+        if (!isDragging) return;
 
-    /* 🔥 EXTRA SAFETY: if mouse leaves screen */
-    document.addEventListener("mouseleave", () => {
         isDragging = false;
         icon.style.cursor = "grab";
     });
