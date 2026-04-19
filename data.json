@@ -1,10 +1,12 @@
 {
-  "graphic": [
-    "portfolio/graphic/poster1.jpg",
-    "portfolio/graphic/poster2.jpg"
-  ],
-  "clients": [
-    "portfolio/clients/client1.jpg",
-    "portfolio/clients/client2.jpg"
-  ]
+  "portfolio": {
+    "graphic": {
+      "posters": [
+        "portfolio/graphic/poster1.jpg"
+      ],
+      "social_media": [
+        "portfolio/graphic/Social_Media/1.jpg"
+      ]
+    }
+  }
 }
