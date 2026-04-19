@@ -12,12 +12,11 @@ body {
   overflow: hidden;
 }
 
-/* ICONS */
+/* ICON */
 .icon {
   position: absolute;
   text-align: center;
   cursor: grab;
-  color: black;
   user-select: none;
 }
 
@@ -28,13 +27,14 @@ body {
 .icon p {
   margin: 5px 0 0;
   font-size: 14px;
+  color: black;
 }
 
-/* WINDOWS */
+/* WINDOW */
 .window {
   position: absolute;
-  width: 400px;
-  height: 300px;
+  width: 420px;
+  height: 320px;
   background: rgba(255,255,255,0.2);
   backdrop-filter: blur(20px);
   border-radius: 15px;
@@ -50,9 +50,10 @@ body {
   right: 10px;
   cursor: pointer;
   color: red;
+  font-size: 18px;
 }
 
-/* IMAGE GRID */
+/* IMAGES */
 .thumb {
   width: 100px;
   margin: 10px;
@@ -75,7 +76,6 @@ body {
 .viewer img {
   max-width: 80%;
   max-height: 80%;
-  transition: transform 0.2s;
 }
 
 /* DOCK */
@@ -100,12 +100,21 @@ body {
 
 <body>
 
-<!-- DESKTOP ICONS -->
-<div class="icon" style="top:50px; left:50px;" ondblclick="loadPortfolio()">📁<p>Portfolio</p></div>
+<!-- ICONS -->
+<div class="icon" id="portfolio" ondblclick="loadPortfolio()">
+  <img src="https://cdn-icons-png.flaticon.com/512/716/716784.png">
+  <p>Portfolio</p>
+</div>
 
-<div class="icon" style="top:150px; left:50px;" ondblclick="openResume()">📄<p>Resume</p></div>
+<div class="icon" id="resume" ondblclick="openResume()">
+  <img src="https://cdn-icons-png.flaticon.com/512/337/337946.png">
+  <p>Resume</p>
+</div>
 
-<div class="icon" style="top:250px; left:50px;" ondblclick="openGame()">❤️<p>Games</p></div>
+<div class="icon" id="games" ondblclick="openGame()">
+  <img src="https://cdn-icons-png.flaticon.com/512/833/833472.png">
+  <p>Games</p>
+</div>
 
 <!-- DOCK -->
 <div class="dock">
@@ -119,17 +128,27 @@ body {
 
 <script>
 
-/* DRAG SYSTEM */
+/* RANDOM POSITION */
+function randomPosition(el) {
+  const x = Math.random() * (window.innerWidth - 100);
+  const y = Math.random() * (window.innerHeight - 150);
+  el.style.left = x + "px";
+  el.style.top = y + "px";
+}
+
+randomPosition(document.getElementById("portfolio"));
+randomPosition(document.getElementById("resume"));
+randomPosition(document.getElementById("games"));
+
+/* DRAG */
 document.querySelectorAll(".icon").forEach(icon => {
-  let offsetX, offsetY, isDragging = false;
+  let offsetX, offsetY;
 
   icon.addEventListener("mousedown", (e) => {
-    isDragging = false;
     offsetX = e.offsetX;
     offsetY = e.offsetY;
 
     function move(e) {
-      isDragging = true;
       icon.style.left = (e.pageX - offsetX) + "px";
       icon.style.top = (e.pageY - offsetY) + "px";
     }
@@ -162,14 +181,21 @@ function createWindow(title) {
   return win;
 }
 
-/* PORTFOLIO */
+/* NAME FORMAT */
+function formatName(name) {
+  return name
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, l => l.toUpperCase());
+}
+
+/* LOAD PORTFOLIO */
 async function loadPortfolio() {
   const res = await fetch("data.json");
   const data = await res.json();
-
   openFolder("Portfolio", data.portfolio);
 }
 
+/* OPEN FOLDER */
 function openFolder(name, content) {
   const win = createWindow(name);
 
@@ -180,10 +206,10 @@ function openFolder(name, content) {
     icon.className = "icon";
 
     if (Array.isArray(item)) {
-      icon.innerHTML = "🖼️<p>" + key + "</p>";
+      icon.innerHTML = "🖼️<p>" + formatName(key) + "</p>";
       icon.ondblclick = () => openImages(key, item);
     } else {
-      icon.innerHTML = "📁<p>" + key + "</p>";
+      icon.innerHTML = "📁<p>" + formatName(key) + "</p>";
       icon.ondblclick = () => openFolder(key, item);
     }
 
@@ -191,8 +217,13 @@ function openFolder(name, content) {
   }
 }
 
+/* OPEN IMAGES */
 function openImages(title, images) {
   const win = createWindow(title);
+
+  win.content.style.display = "flex";
+  win.content.style.flexWrap = "wrap";
+  win.content.style.justifyContent = "center";
 
   images.forEach(src => {
     const img = document.createElement("img");
@@ -205,7 +236,7 @@ function openImages(title, images) {
   });
 }
 
-/* IMAGE VIEWER */
+/* VIEWER */
 function openViewer(src) {
   const viewer = document.createElement("div");
   viewer.className = "viewer";
@@ -213,17 +244,7 @@ function openViewer(src) {
   const img = document.createElement("img");
   img.src = src;
 
-  let scale = 1;
-
   viewer.appendChild(img);
-
-  viewer.onwheel = (e) => {
-    e.preventDefault();
-    scale += e.deltaY * -0.001;
-    scale = Math.min(Math.max(1, scale), 5);
-    img.style.transform = `scale(${scale})`;
-  };
-
   viewer.onclick = () => viewer.remove();
 
   document.body.appendChild(viewer);
