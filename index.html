@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html>
 <head>
 <title>Avi OS</title>
@@ -91,14 +92,56 @@ body {
   transform: scale(1.3);
 }
 </style>
+
 </head>
 
 <body>
 
 <!-- ICONS -->
-<div class="icon" ondblclick="openWindow('portfolio')">
+
+<div class="icon" ondblclick="openWindow('social')">
   <img src="https://cdn-icons-png.flaticon.com/512/716/716784.png">
-  <span>Portfolio</span>
+  <span>Social Media</span>
+</div>
+
+<div class="icon" ondblclick="openWindow('banners')">
+  <img src="https://cdn-icons-png.flaticon.com/512/716/716784.png">
+  <span>Banners</span>
+</div>
+
+<div class="icon" ondblclick="openWindow('posters')">
+  <img src="https://cdn-icons-png.flaticon.com/512/716/716784.png">
+  <span>Posters</span>
+</div>
+
+<div class="icon" ondblclick="openWindow('brochures')">
+  <img src="https://cdn-icons-png.flaticon.com/512/716/716784.png">
+  <span>Brochures</span>
+</div>
+
+<div class="icon" ondblclick="openWindow('visual')">
+  <img src="https://cdn-icons-png.flaticon.com/512/716/716784.png">
+  <span>3D & Visualization</span>
+</div>
+
+<div class="icon" ondblclick="openWindow('tiles')">
+  <img src="https://cdn-icons-png.flaticon.com/512/716/716784.png">
+  <span>Tiles</span>
+</div>
+
+<div class="icon" ondblclick="openWindow('motion')">
+  <img src="https://cdn-icons-png.flaticon.com/512/716/716784.png">
+  <span>Motion & Video</span>
+</div>
+
+<div class="icon" ondblclick="openWindow('photo')">
+  <img src="https://cdn-icons-png.flaticon.com/512/716/716784.png">
+  <span>Photography</span>
+</div>
+
+<div class="icon" ondblclick="openWindow('branding')">
+  <img src="https://cdn-icons-png.flaticon.com/512/716/716784.png">
+  <span>Branding</span>
 </div>
 
 <div class="icon" ondblclick="openWindow('about')">
@@ -112,12 +155,16 @@ body {
 </div>
 
 <!-- WINDOWS -->
-<div id="portfolio" class="window">
-  <div class="close" onclick="closeWindow('portfolio')">●</div>
-  <h3>Portfolio</h3>
-  <p>Graphic Design</p>
-  <p>Clients</p>
-</div>
+
+<div id="social" class="window"><div class="close" onclick="closeWindow('social')">●</div><h3>Social Media</h3></div>
+<div id="banners" class="window"><div class="close" onclick="closeWindow('banners')">●</div><h3>Banners</h3></div>
+<div id="posters" class="window"><div class="close" onclick="closeWindow('posters')">●</div><h3>Posters</h3></div>
+<div id="brochures" class="window"><div class="close" onclick="closeWindow('brochures')">●</div><h3>Brochures</h3></div>
+<div id="visual" class="window"><div class="close" onclick="closeWindow('visual')">●</div><h3>3D & Visualization</h3></div>
+<div id="tiles" class="window"><div class="close" onclick="closeWindow('tiles')">●</div><h3>Tiles</h3></div>
+<div id="motion" class="window"><div class="close" onclick="closeWindow('motion')">●</div><h3>Motion & Video</h3></div>
+<div id="photo" class="window"><div class="close" onclick="closeWindow('photo')">●</div><h3>Photography</h3></div>
+<div id="branding" class="window"><div class="close" onclick="closeWindow('branding')">●</div><h3>Branding</h3></div>
 
 <div id="about" class="window">
   <div class="close" onclick="closeWindow('about')">●</div>
@@ -132,6 +179,7 @@ body {
 </div>
 
 <!-- DOCK -->
+
 <div class="dock">
 
   <a href="https://wa.me/919537235783" target="_blank">
@@ -150,9 +198,10 @@ body {
     <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png">
   </a>
 
-  <!-- FIXED BEHANCE -->
+  <!-- BEHANCE FIXED -->
+
   <a href="https://www.behance.net/avinashnair274/projects" target="_blank">
-    <img src="https://cdn-icons-png.flaticon.com/512/733/733609.png">
+    <img src="https://cdn-icons-png.flaticon.com/512/145/145799.png">
   </a>
 
   <a href="https://dribbble.com/AvinashNair" target="_blank">
@@ -162,6 +211,7 @@ body {
 </div>
 
 <!-- SCRIPT -->
+
 <script>
 
 /* WINDOW */
@@ -173,55 +223,42 @@ function closeWindow(id){
   document.getElementById(id).style.display = "none";
 }
 
-/* LOAD AFTER PAGE READY */
+/* RANDOM + DRAG */
 window.onload = function() {
 
   const icons = document.querySelectorAll(".icon");
 
   icons.forEach(icon => {
 
-    /* RANDOM POSITION (NO CORNER BUG) */
-    const x = Math.random() * (window.innerWidth - 120);
-    const y = Math.random() * (window.innerHeight - 180);
-
-    icon.style.left = x + "px";
-    icon.style.top = y + "px";
+    icon.style.left = Math.random() * (window.innerWidth - 120) + "px";
+    icon.style.top = Math.random() * (window.innerHeight - 180) + "px";
 
     let offsetX = 0;
     let offsetY = 0;
     let isDragging = false;
-    let moved = false;
 
-    /* DRAG START */
     icon.addEventListener("mousedown", function(e) {
       if (e.button !== 0) return;
 
       isDragging = true;
-      moved = false;
-
       offsetX = e.clientX - icon.offsetLeft;
       offsetY = e.clientY - icon.offsetTop;
 
       document.body.style.userSelect = "none";
     });
 
-    /* DRAG MOVE */
     document.addEventListener("mousemove", function(e) {
       if (!isDragging) return;
-
-      moved = true;
 
       icon.style.left = (e.clientX - offsetX) + "px";
       icon.style.top = (e.clientY - offsetY) + "px";
     });
 
-    /* DRAG END */
     document.addEventListener("mouseup", function() {
       isDragging = false;
       document.body.style.userSelect = "auto";
     });
 
-    /* PREVENT 🚫 BUG */
     icon.ondragstart = () => false;
 
   });
